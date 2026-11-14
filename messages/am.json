@@ -1,0 +1,21 @@
+{
+  "Nav": {
+    "home": "መነሻ",
+    "contribute": "አስተዋጽኦ",
+    "join": "አጋር ይሁኑ",
+    "myHistory": "የእኔ ታሪክ",
+    "admin": "አስተዳዳሪ"
+  },
+  "Home": {
+    "title": "ለጌታ ማበደር",
+    "subtitle": "ወርሃዊ የአጋሮች እና የስፖንሰሮች አስተዋጽኦ",
+    "reportedTotal": "በዚህ ወር የተመዘገበ ጠቅላላ አስተዋጽኦ",
+    "pendingReconciliation": "የሂሳብ ማስታረቅ እስኪደረግ ድረስ የተመዘገበ አስተዋጽኦ",
+    "submitContribution": "አስተዋጽኦ ያስገቡ",
+    "becomePartner": "አጋር ይሁኑ",
+    "recentContributions": "የቅርብ ጊዜ አስተዋጽኦዎች",
+    "anonymousEntry": "አንድ ሰው {amount} ብር አበርክቷል",
+    "namedEntry": "{name} {amount} ብር አበርክቷል",
+    "noContributions": "በዚህ ወር እስካሁን የተመዘገበ አስተዋጽኦ የለም።"
+  }
+}

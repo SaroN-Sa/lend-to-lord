@@ -1,0 +1,21 @@
+{
+  "Nav": {
+    "home": "Home",
+    "contribute": "Contribute",
+    "join": "Join",
+    "myHistory": "My History",
+    "admin": "Admin"
+  },
+  "Home": {
+    "title": "Lend To Lord",
+    "subtitle": "Monthly partner & sponsor contributions",
+    "reportedTotal": "Reported Contributions This Month",
+    "pendingReconciliation": "Reported contributions (pending monthly bank reconciliation)",
+    "submitContribution": "Submit Contribution",
+    "becomePartner": "Become a Partner",
+    "recentContributions": "Recent Contributions",
+    "anonymousEntry": "Someone contributed {amount} ETB",
+    "namedEntry": "{name} contributed {amount} ETB",
+    "noContributions": "No contributions recorded yet this month."
+  }
+}
