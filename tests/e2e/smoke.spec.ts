@@ -8,7 +8,6 @@ test('1. home page loads', async ({ page }) => {
 });
 
 // 2. Switch the language (am -> en)
-// 2. Switch the language (am -> en)
 test('2. switch language between am and en', async ({ page }) => {
   await page.goto('/am');
   const enTarget = page.locator(
