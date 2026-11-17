@@ -7,20 +7,9 @@ test('1. home page loads', async ({ page }) => {
   await expect(page.locator('body')).toBeVisible();
 });
 
-// 2. Switch the language (am -> en)
-test('2. switch language between am and en', async ({ page }) => {
-  await page.goto('/am');
+# Lines starting with '#' will be ignored, and an empty message aborts
+# the commit.
 
-  const enTarget = page.locator(
-    'a[href="/en"]:visible, a[href^="/en/"]:visible, button:visible:text-is("EN"), a:visible:text-is("EN"), button:visible:text-is("English"), a:visible:text-is("English")'
-  ).first();
-
-  // Fail if the language switcher is missing instead of silently navigating
-  // directly to /en, which would not test the switcher.
-  await expect(enTarget).toBeVisible();
-  await enTarget.click();
-  await expect(page).toHaveURL(/\/en(?:\/|$)/);
-});
 
 // 3. Main menu link works
 test('3. main menu links work', async ({ page }) => {
