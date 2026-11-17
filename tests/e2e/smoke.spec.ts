@@ -25,7 +25,6 @@ test('2. switch language between am and en', async ({ page }) => {
   await expect(page).toHaveURL(/\/en/);
 });
 
-
 // 3. Main menu link works
 test('3. main menu links work', async ({ page }) => {
   await page.goto('/am');
