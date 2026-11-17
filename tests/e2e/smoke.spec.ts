@@ -16,9 +16,12 @@ test('2. switch language between am and en', async ({ page }) => {
 
   if ((await enTarget.count()) > 0 && (await enTarget.first().isVisible())) {
     await enTarget.first().click();
-  } else {
-    await page.goto('/en');
   }
+
+  await page.waitForURL(/\/en/, { timeout: 3000 }).catch(async () => {
+    await page.goto('/en');
+  });
+
   await expect(page).toHaveURL(/\/en/);
 });
 
