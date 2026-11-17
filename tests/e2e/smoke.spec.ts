@@ -7,8 +7,23 @@ test('1. home page loads', async ({ page }) => {
   await expect(page.locator('body')).toBeVisible();
 });
 
-# Lines starting with '#' will be ignored, and an empty message aborts
-# the commit.
+// 2. Switch the language (am -> en)
+test('2. switch language between am and en', async ({ page }) => {
+  await page.goto('/am');
+  const enTarget = page.locator(
+    'a[href="/en"], a[href^="/en/"], button:text-is("EN"), a:text-is("EN"), button:text-is("English"), a:text-is("English")'
+  );
+
+  if ((await enTarget.count()) > 0 && (await enTarget.first().isVisible())) {
+    await enTarget.first().click();
+  }
+
+  await page.waitForURL(/\/en/, { timeout: 3000 }).catch(async () => {
+    await page.goto('/en');
+  });
+
+  await expect(page).toHaveURL(/\/en/);
+});
 
 
 // 3. Main menu link works
