@@ -8,6 +8,7 @@ test('1. home page loads', async ({ page }) => {
 });
 
 // 2. Switch the language (am -> en)
+// 2. Switch the language (am -> en)
 test('2. switch language between am and en', async ({ page }) => {
   await page.goto('/am');
   const enTarget = page.locator(
@@ -24,6 +25,7 @@ test('2. switch language between am and en', async ({ page }) => {
 
   await expect(page).toHaveURL(/\/en/);
 });
+
 
 // 3. Main menu link works
 test('3. main menu links work', async ({ page }) => {
