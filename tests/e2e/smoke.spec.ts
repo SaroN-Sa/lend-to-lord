@@ -10,21 +10,17 @@ test('1. home page loads', async ({ page }) => {
 // 2. Switch the language (am -> en)
 test('2. switch language between am and en', async ({ page }) => {
   await page.goto('/am');
+
   const enTarget = page.locator(
-    'a[href="/en"], a[href^="/en/"], button:text-is("EN"), a:text-is("EN"), button:text-is("English"), a:text-is("English")'
-  );
+    'a[href="/en"]:visible, a[href^="/en/"]:visible, button:visible:text-is("EN"), a:visible:text-is("EN"), button:visible:text-is("English"), a:visible:text-is("English")'
+  ).first();
 
-  if ((await enTarget.count()) > 0 && (await enTarget.first().isVisible())) {
-    await enTarget.first().click();
-  }
-
-  await page.waitForURL(/\/en/, { timeout: 3000 }).catch(async () => {
-    await page.goto('/en');
-  });
-
-  await expect(page).toHaveURL(/\/en/);
+  // Fail if the language switcher is missing instead of silently navigating
+  // directly to /en, which would not test the switcher.
+  await expect(enTarget).toBeVisible();
+  await enTarget.click();
+  await expect(page).toHaveURL(/\/en(?:\/|$)/);
 });
-
 
 // 3. Main menu link works
 test('3. main menu links work', async ({ page }) => {
