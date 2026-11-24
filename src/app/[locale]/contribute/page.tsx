@@ -1,4 +1,6 @@
 import { setRequestLocale } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { isValidLocale } from '@/i18n/routing';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import ContributeForm from './ContributeForm';
 
@@ -10,6 +12,9 @@ export default async function ContributePage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  if (!isValidLocale(locale)) {
+    notFound();
+  }
   setRequestLocale(locale);
 
   // Fetch active bank and payment accounts for the form dropdowns

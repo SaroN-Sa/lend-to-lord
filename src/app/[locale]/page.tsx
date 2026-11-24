@@ -1,146 +1,133 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import Link from 'next/link';
-import { supabase } from '@/lib/supabase/client';
-import {
-  getEthiopianDateParts,
-  formatEthiopianMonth,
-  formatEthiopianDay,
-} from '@/lib/ethiopian-calendar';
+import { Link } from '@/i18n/routing';
+import { supabaseAdmin } from '@/lib/supabase/admin';
+import { CAMPAIGN_GOAL_BIRR, UI_COPY, type AppLocale } from '@/lib/constants';
+import { formatBirr, formatShortDate } from '@/lib/validation';
+import { ProgressBar, StatCard } from '@/components/UiPrimitives';
 
 export const dynamic = 'force-dynamic';
+
+async function getPublicCampaignStats() {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('contributions')
+      .select('id, donor_name, amount_birr, bank_name, is_anonymous, created_at')
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false })
+      .limit(50);
+
+    if (error || !data) return { totalBirr: 0, donorCount: 0, recent: [] };
+
+    const totalBirr = data.reduce((sum, r) => sum + Number(r.amount_birr || 0), 0);
+    return {
+      totalBirr,
+      donorCount: data.length,
+      recent: data.slice(0, 6),
+    };
+  } catch {
+    return { totalBirr: 0, donorCount: 0, recent: [] };
+  }
+}
 
 export default async function HomePage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
-  setRequestLocale(locale);
-
-  const t = await getTranslations('Home');
-
-  // 1. Get current Ethiopian month key (e.g. '2019-03' for Hidar 2019 E.C.)
-  const { monthKey: currentEthMonth } = getEthiopianDateParts();
-  const monthLabel = formatEthiopianMonth(currentEthMonth, locale);
-
-  // 2. Fetch monthly total & reconciliation status from Supabase public view
-  const { data: monthlyData } = await supabase
-    .from('public_monthly_totals')
-    .select('total_birr, contributions, is_reconciled')
-    .eq('ethiopian_month', currentEthMonth)
-    .maybeSingle();
-
-  // 3. Fetch recent contributions for the anonymous public feed
-  const { data: feed } = await supabase
-    .from('public_feed')
-    .select('id, amount_birr, kind, created_at, display_name')
-    .eq('ethiopian_month', currentEthMonth)
-    .order('created_at', { ascending: false })
-    .limit(10);
-
-  const totalBirr = Number(monthlyData?.total_birr ?? 0).toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
-  const isReconciled = Boolean(monthlyData?.is_reconciled);
+  const { locale: rawLocale } = await params;
+  const locale: AppLocale = rawLocale === 'en' ? 'en' : 'am';
+  const copy = UI_COPY[locale];
+  const stats = await getPublicCampaignStats();
 
   return (
-    <main className="space-y-8">
-      {/* Vision Banner */}
-      <section className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold text-[#1B4332] dark:text-emerald-400">
-          {t('title')}
-        </h1>
-        <p className="text-sm text-stone-600 dark:text-slate-400 max-w-xl mx-auto">
-          {t('subtitle')}
-        </p>
-      </section>
-
-      {/* Hero Monthly Total Card */}
-      <section className="rounded-2xl bg-white dark:bg-slate-900 border border-amber-500/30 p-8 shadow-sm text-center space-y-3">
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-sm font-bold text-[#1B4332] dark:text-emerald-400">
-            {monthLabel}
+    <main className="mx-auto max-w-6xl space-y-14 px-4 py-10 sm:px-6">
+      {/* Hero Banner */}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 px-6 py-12 text-white shadow-xl sm:px-12 sm:py-16">
+        <div className="max-w-3xl space-y-5">
+          <span className="inline-flex items-center rounded-full bg-amber-400/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
+            {copy.hero.badge}
           </span>
-          <span
-            className={`inline-block text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full ${
-              isReconciled
-                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-            }`}
-          >
-            {isReconciled
-              ? locale === 'am'
-                ? 'በባንክ የተረጋገጠ ጠቅላላ ገቢ'
-                : 'Verified & Reconciled Total'
-              : t('reportedTotal')}
-          </span>
+          <h1 className="text-3xl font-extrabold leading-tight sm:text-5xl">
+            {copy.hero.title}
+          </h1>
+          <p className="text-base leading-relaxed text-emerald-100 sm:text-lg">
+            {copy.hero.subtitle}
+          </p>
+          <div className="flex flex-wrap gap-3 pt-2">
+            <Link
+              href="/contribute"
+              className="rounded-xl bg-amber-400 px-6 py-3 text-sm font-extrabold text-emerald-950 shadow-md transition hover:bg-amber-300"
+            >
+              {copy.hero.ctaPrimary}
+            </Link>
+            <Link
+              href="/contribute"
+              className="rounded-xl border border-emerald-400/40 bg-white/10 px-6 py-3 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20"
+            >
+              {copy.hero.ctaSecondary}
+            </Link>
+          </div>
         </div>
-
-        <p className="text-4xl sm:text-5xl font-bold tabular-nums text-[#1B4332] dark:text-emerald-400">
-          {totalBirr} <span className="text-2xl font-semibold text-amber-600">ETB</span>
-        </p>
-
-        <p className="text-xs text-stone-500 dark:text-slate-400">
-          {isReconciled
-            ? locale === 'am'
-              ? 'ይህ መጠን ከባንክ እና ቴሌብር መግለጫ ጋር ተመሳክሯል።'
-              : 'Reconciled against official bank & Telebirr statements.'
-            : t('pendingReconciliation')}
-        </p>
       </section>
 
-      {/* Primary Action Buttons */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <Link
-          href={`/${locale}/contribute`}
-          className="py-3.5 px-5 rounded-xl bg-[#1B4332] hover:bg-[#143325] text-white font-semibold text-center shadow-sm transition"
-        >
-          {t('submitContribution')}
-        </Link>
-        <Link
-          href={`/${locale}/join`}
-          className="py-3.5 px-5 rounded-xl border border-[#1B4332]/30 dark:border-emerald-500/30 bg-white dark:bg-slate-900 hover:bg-stone-100 dark:hover:bg-slate-800 font-semibold text-center transition"
-        >
-          {t('becomePartner')}
-        </Link>
-      </div>
+      {/* Live Campaign Progress */}
+      <section className="space-y-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <StatCard label={copy.progress.raised} value={formatBirr(stats.totalBirr)} accent="emerald" />
+          <StatCard label={copy.progress.goal} value={formatBirr(CAMPAIGN_GOAL_BIRR)} accent="amber" />
+          <StatCard
+            label={copy.progress.donors}
+            value={stats.donorCount}
+            hint={copy.progress.verified}
+            accent="slate"
+          />
+        </div>
+        <ProgressBar current={stats.totalBirr} goal={CAMPAIGN_GOAL_BIRR} />
+      </section>
 
-      {/* Anonymous Public Feed */}
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">
-          {t('recentContributions')} ({monthLabel})
+      {/* 3-Step Flow */}
+      <section className="space-y-6">
+        <h2 className="text-center text-2xl font-extrabold text-slate-900">
+          {copy.stepsTitle}
         </h2>
-        <div className="divide-y divide-stone-200 dark:divide-slate-800 rounded-xl border border-stone-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-          {feed && feed.length > 0 ? (
-            feed.map((item) => (
-              <div key={item.id} className="p-4 flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-amber-500" />
-                  <span>
-                    {item.display_name
-                      ? t('namedEntry', {
-                          name: item.display_name,
-                          amount: Number(item.amount_birr).toLocaleString(),
-                        })
-                      : t('anonymousEntry', {
-                          amount: Number(item.amount_birr).toLocaleString(),
-                        })}
-                  </span>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+          {copy.steps.map((step) => (
+            <div
+              key={step.title}
+              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <h3 className="text-base font-bold text-emerald-900">{step.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Recent Verified Contributions */}
+      {stats.recent.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-xl font-extrabold text-slate-900">Recent Verified Contributions</h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {stats.recent.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+              >
+                <div>
+                  <p className="text-sm font-bold text-slate-900">
+                    {item.is_anonymous ? 'Anonymous Donor' : item.donor_name}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {item.bank_name} · {formatShortDate(item.created_at)}
+                  </p>
                 </div>
-                <span className="text-xs text-stone-400">
-                  {formatEthiopianDay(item.created_at, locale)}
+                <span className="rounded-lg bg-emerald-50 px-2.5 py-1 text-sm font-extrabold text-emerald-800">
+                  {formatBirr(item.amount_birr)}
                 </span>
               </div>
-            ))
-          ) : (
-            <p className="p-6 text-center text-sm text-stone-500">
-              {t('noContributions')}
-            </p>
-          )}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

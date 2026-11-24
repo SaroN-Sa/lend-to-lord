@@ -1,5 +1,7 @@
 import { setRequestLocale } from 'next-intl/server';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { isValidLocale } from '@/i18n/routing';
 import { supabase } from '@/lib/supabase/client';
 import { formatEthiopianMonth } from '@/lib/ethiopian-calendar';
 
@@ -11,6 +13,9 @@ export default async function MonthlyUpdatePage({
   params: Promise<{ locale: string; month: string }>;
 }) {
   const { locale, month } = await params;
+  if (!isValidLocale(locale)) {
+    notFound();
+  }
   setRequestLocale(locale);
 
   const monthLabel = formatEthiopianMonth(month, locale);

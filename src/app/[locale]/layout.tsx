@@ -4,7 +4,8 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { routing } from '@/i18n/routing';
+import { routing, isValidLocale } from '@/i18n/routing';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import '../globals.css';
 
 const notoEthiopic = Noto_Sans_Ethiopic({
@@ -19,13 +20,35 @@ const jakarta = Plus_Jakarta_Sans({
   variable: '--font-jakarta',
 });
 
-export const metadata: Metadata = {
-  title: 'Lend To Lord | ለጌታ ማበደር',
-  description: 'Monthly partner and sponsor contributions',
-};
-
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const metadataBase = new URL(siteUrl);
+
+  return {
+    metadataBase,
+    title: locale === 'am' ? 'ለጌታ ማበደር | Lend To Lord' : 'Lend To Lord | ለጌታ ማበደር',
+    description:
+      locale === 'am'
+        ? 'ወርሃዊ የአጋሮች እና የስፖንሰሮች አስተዋጽኦ'
+        : 'Monthly partner and sponsor contributions',
+    alternates: {
+      canonical: `/${locale}`,
+      languages: {
+        en: '/en',
+        am: '/am',
+        'x-default': '/en',
+      },
+    },
+  };
 }
 
 export default async function LocaleLayout({
@@ -37,7 +60,7 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
 
-  if (!routing.locales.includes(locale as 'am' | 'en')) {
+  if (!isValidLocale(locale)) {
     notFound();
   }
 
@@ -76,33 +99,12 @@ export default async function LocaleLayout({
                 <Link href={`/${locale}/me`} className="hover:text-[#1B4332] dark:hover:text-emerald-400">
                   {tNav('myHistory')}
                 </Link>
-                <Link href={`/${locale}/admin`} className="hover:text-[#1B4332] dark:hover:text-emerald-400">
+                <Link href="/admin" className="hover:text-[#1B4332] dark:hover:text-emerald-400">
                   {tNav('admin')}
                 </Link>
               </nav>
 
-              <div className="flex items-center gap-1.5 text-xs font-semibold">
-                <Link
-                  href="/am"
-                  className={`px-2.5 py-1 rounded-md transition ${
-                    locale === 'am'
-                      ? 'bg-[#1B4332] text-white'
-                      : 'border border-stone-300 dark:border-slate-700'
-                  }`}
-                >
-                  አማርኛ
-                </Link>
-                <Link
-                  href="/en"
-                  className={`px-2.5 py-1 rounded-md transition ${
-                    locale === 'en'
-                      ? 'bg-[#1B4332] text-white'
-                      : 'border border-stone-300 dark:border-slate-700'
-                  }`}
-                >
-                  EN
-                </Link>
-              </div>
+              <LanguageSwitcher />
             </div>
           </header>
 

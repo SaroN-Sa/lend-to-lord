@@ -17,5 +17,13 @@
     "anonymousEntry": "አንድ ሰው {amount} ብር አበርክቷል",
     "namedEntry": "{name} {amount} ብር አበርክቷል",
     "noContributions": "በዚህ ወር እስካሁን የተመዘገበ አስተዋጽኦ የለም።"
+  },
+  "Common": {
+    "siteTitle": "ለጌታ ማበደር",
+    "becomePartner": "አጋር ይሁኑ"
+  },
+  "Language": {
+    "en": "English",
+    "am": "አማርኛ"
   }
 }

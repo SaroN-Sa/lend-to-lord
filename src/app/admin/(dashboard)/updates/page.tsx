@@ -1,14 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getEthiopianDateParts, formatEthiopianMonth } from '@/lib/ethiopian-calendar';
 
 export default function AdminUpdatesPage() {
-  const params = useParams<{ locale: string }>();
-  const locale = params?.locale || 'am';
-
   const [ethMonth, setEthMonth] = useState(() => getEthiopianDateParts().monthKey);
   const [titleAm, setTitleAm] = useState('');
   const [bodyAm, setBodyAm] = useState('');
@@ -65,10 +61,7 @@ export default function AdminUpdatesPage() {
       } else {
         setStatus({
           type: 'success',
-          msg:
-            locale === 'am'
-              ? `የ${formatEthiopianMonth(ethMonth, 'am')} ወርሃዊ መልእክት ተቀምጧል!`
-              : `Monthly update for ${formatEthiopianMonth(ethMonth, 'en')} saved!`,
+          msg: `Monthly update for ${formatEthiopianMonth(ethMonth, 'en')} saved!`,
         });
       }
     } catch {
@@ -80,9 +73,7 @@ export default function AdminUpdatesPage() {
 
   async function handleSendRemindersNow() {
     const confirmed = window.confirm(
-      locale === 'am'
-        ? `ለሁሉም የተገናኙ አባላት የ${formatEthiopianMonth(ethMonth, 'am')} ወርሃዊ ማስታወሻ በቴሌግራም ይላክ?`
-        : `Send the ${formatEthiopianMonth(ethMonth, 'en')} monthly reminder on Telegram to all connected members now?`
+      `Send the ${formatEthiopianMonth(ethMonth, 'en')} monthly reminder on Telegram to all connected members now?`
     );
     if (!confirmed) return;
 
@@ -100,10 +91,7 @@ export default function AdminUpdatesPage() {
       } else {
         setStatus({
           type: 'success',
-          msg:
-            locale === 'am'
-              ? `ወርሃዊ ማስታወሻ ለ ${data.sent} አባላት በቴሌግራም ተልኳል!`
-              : `Monthly reminder sent to ${data.sent} members on Telegram!`,
+          msg: `Monthly reminder sent to ${data.sent} members on Telegram!`,
         });
       }
     } catch {
@@ -114,23 +102,29 @@ export default function AdminUpdatesPage() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto space-y-6">
+    <main className="max-w-2xl mx-auto space-y-6 py-8 px-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-[#1B4332] dark:text-emerald-400">
-            {locale === 'am' ? 'ወርሃዊ መልእክት ማዘጋጃ' : 'Write Monthly Update'}
-          </h1>
+          <h1 className="text-2xl font-bold text-[#1B4332]">Write Monthly Update</h1>
           <p className="text-xs text-stone-500">
-            {formatEthiopianMonth(ethMonth, locale)} ({ethMonth})
+            {formatEthiopianMonth(ethMonth, 'en')} ({ethMonth})
           </p>
         </div>
 
-        <Link
-          href={`/${locale}/update/${ethMonth}`}
-          className="px-3.5 py-2 rounded-lg border border-stone-300 dark:border-slate-700 text-xs font-semibold hover:bg-stone-100 dark:hover:bg-slate-800"
-        >
-          {locale === 'am' ? 'ገጹን ተመልከት ↗' : 'Preview Public Page ↗'}
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin"
+            className="px-3.5 py-2 rounded-lg border border-stone-300 text-xs font-semibold hover:bg-stone-100"
+          >
+            ← Admin Console
+          </Link>
+          <Link
+            href={`/en/update/${ethMonth}`}
+            className="px-3.5 py-2 rounded-lg border border-stone-300 text-xs font-semibold hover:bg-stone-100"
+          >
+            Preview Public Page ↗
+          </Link>
+        </div>
       </div>
 
       {status && (
@@ -147,18 +141,16 @@ export default function AdminUpdatesPage() {
 
       <form
         onSubmit={handleSave}
-        className="rounded-2xl bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 p-6 space-y-4 shadow-sm"
+        className="rounded-2xl bg-white border border-stone-200 p-6 space-y-4 shadow-sm"
       >
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium">
-            {locale === 'am' ? 'የኢትዮጵያ ወር (YYYY-MM)' : 'Ethiopian Month (YYYY-MM)'}
-          </label>
+          <label className="block text-sm font-medium">Ethiopian Month (YYYY-MM)</label>
           <input
             type="text"
             value={ethMonth}
             onChange={(e) => setEthMonth(e.target.value)}
             placeholder="2019-03"
-            className="w-full rounded-lg border border-stone-300 dark:border-slate-700 bg-transparent px-3.5 py-2 text-sm tabular-nums"
+            className="w-full rounded-lg border border-stone-300 bg-transparent px-3.5 py-2 text-sm tabular-nums"
           />
         </div>
 
@@ -169,7 +161,7 @@ export default function AdminUpdatesPage() {
             value={titleAm}
             onChange={(e) => setTitleAm(e.target.value)}
             placeholder="የኅዳር ወር መልእክት እና ራዕይ"
-            className="w-full rounded-lg border border-stone-300 dark:border-slate-700 bg-transparent px-3.5 py-2 text-sm"
+            className="w-full rounded-lg border border-stone-300 bg-transparent px-3.5 py-2 text-sm"
           />
         </div>
 
@@ -179,18 +171,18 @@ export default function AdminUpdatesPage() {
             rows={4}
             value={bodyAm}
             onChange={(e) => setBodyAm(e.target.value)}
-            className="w-full rounded-lg border border-stone-300 dark:border-slate-700 bg-transparent px-3.5 py-2 text-sm"
+            className="w-full rounded-lg border border-stone-300 bg-transparent px-3.5 py-2 text-sm"
           />
         </div>
 
-        <div className="space-y-1.5 pt-2 border-t border-stone-200 dark:border-slate-800">
+        <div className="space-y-1.5 pt-2 border-t border-stone-200">
           <label className="block text-sm font-medium">English Title</label>
           <input
             type="text"
             value={titleEn}
             onChange={(e) => setTitleEn(e.target.value)}
             placeholder="Hidar Monthly Vision & Update"
-            className="w-full rounded-lg border border-stone-300 dark:border-slate-700 bg-transparent px-3.5 py-2 text-sm"
+            className="w-full rounded-lg border border-stone-300 bg-transparent px-3.5 py-2 text-sm"
           />
         </div>
 
@@ -200,7 +192,7 @@ export default function AdminUpdatesPage() {
             rows={4}
             value={bodyEn}
             onChange={(e) => setBodyEn(e.target.value)}
-            className="w-full rounded-lg border border-stone-300 dark:border-slate-700 bg-transparent px-3.5 py-2 text-sm"
+            className="w-full rounded-lg border border-stone-300 bg-transparent px-3.5 py-2 text-sm"
           />
         </div>
 
@@ -211,11 +203,7 @@ export default function AdminUpdatesPage() {
             onChange={(e) => setPublished(e.target.checked)}
             className="rounded border-stone-300"
           />
-          <span>
-            {locale === 'am'
-              ? 'ለሕዝብ ይታይ (Published)'
-              : 'Published (visible on public page & ready for Telegram reminder)'}
-          </span>
+          <span>Published (visible on public page & ready for Telegram reminder)</span>
         </label>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-2">
@@ -224,13 +212,7 @@ export default function AdminUpdatesPage() {
             disabled={saving}
             className="flex-1 py-3 rounded-xl bg-[#1B4332] hover:bg-[#143325] disabled:opacity-50 text-white font-semibold transition"
           >
-            {saving
-              ? locale === 'am'
-                ? 'በማስቀመጥ ላይ...'
-                : 'Saving...'
-              : locale === 'am'
-              ? 'መልእክቱን አስቀምጥ'
-              : 'Save Monthly Update'}
+            {saving ? 'Saving...' : 'Save Monthly Update'}
           </button>
 
           <button
@@ -239,13 +221,7 @@ export default function AdminUpdatesPage() {
             disabled={sendingReminders}
             className="py-3 px-5 rounded-xl bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold transition"
           >
-            {sendingReminders
-              ? locale === 'am'
-                ? 'በመላክ ላይ...'
-                : 'Sending...'
-              : locale === 'am'
-              ? 'ማስታወሻ በቴሌግራም ላክ'
-              : 'Send Telegram Reminder'}
+            {sendingReminders ? 'Sending...' : 'Send Telegram Reminder'}
           </button>
         </div>
       </form>

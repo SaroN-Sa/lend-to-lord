@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 export interface PaymentAccount {
   id: string;
@@ -19,7 +18,6 @@ export default function ContributeForm({
   locale: string;
   accounts: PaymentAccount[];
 }) {
-  const router = useRouter();
   const [kind, setKind] = useState<'partner' | 'sponsor'>('partner');
   const [method, setMethod] = useState<'telebirr' | 'bank'>('telebirr');
   const [amountBirr, setAmountBirr] = useState('');

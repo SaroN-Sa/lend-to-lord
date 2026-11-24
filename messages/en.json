@@ -17,5 +17,16 @@
     "anonymousEntry": "Someone contributed {amount} ETB",
     "namedEntry": "{name} contributed {amount} ETB",
     "noContributions": "No contributions recorded yet this month."
+  },
+  "Common": {
+    "siteTitle": "Lend To Lord",
+    "becomePartner": "Become a partner"
+  },
+  "Language": {
+    "en": "English",
+    "am": "አማርኛ"
+  },
+  "content": {
+    "vision": "Empowering communities through transparent, faith-rooted support across Ethiopia."
   }
 }

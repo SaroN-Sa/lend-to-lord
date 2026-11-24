@@ -1,31 +1,37 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-let cachedAdminClient: SupabaseClient | null = null;
+let cachedAdmin: SupabaseClient | null = null;
 
 export function getSupabaseAdmin(): SupabaseClient {
-  if (cachedAdminClient) {
-    return cachedAdminClient;
-  }
+  if (cachedAdmin) return cachedAdmin;
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
-  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key';
+  const url =
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+  const key =
+    process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key';
 
-  cachedAdminClient = createClient(supabaseUrl, supabaseServiceRoleKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
+  cachedAdmin = createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  return cachedAdminClient;
+  return cachedAdmin;
 }
 
-// Proxy export for backward compatibility if other files import `supabaseAdmin` directly
 export const supabaseAdmin = new Proxy({} as SupabaseClient, {
   get(_, prop) {
     const client = getSupabaseAdmin();
-    // @ts-expect-error dynamic proxy property lookup
-    const value = client[prop];
+    const value = client[prop as keyof SupabaseClient];
     return typeof value === 'function' ? value.bind(client) : value;
   },
 });
+
+export async function getReceiptSignedUrl(
+  path: string | null | undefined,
+  expiresInSeconds = 3600
+): Promise<string | null> {
+  if (!path) return null;
+  const { data, error } = await supabaseAdmin.storage
+    .from('screenshots')
+    .createSignedUrl(path, expiresInSeconds);
+  return error ? null : data.signedUrl;
+}
