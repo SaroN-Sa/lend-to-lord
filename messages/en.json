@@ -31,6 +31,12 @@
     "switchToDark": "Switch to dark mode",
     "switchToLight": "Switch to light mode"
   },
+  "SkipLink": {
+    "skipToContent": "Skip to content"
+  },
+  "Footer": {
+    "copyright": "© 2026 Lend To Lord. Transparent monthly partner contributions."
+  },
   "content": {
     "vision": "Empowering communities through transparent, faith-rooted support across Ethiopia."
   }

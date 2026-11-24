@@ -11,6 +11,11 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
+  --color-glass-bg: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
+  --color-glass-highlight: var(--glass-highlight);
+  --color-glass-shadow: var(--glass-shadow);
+  --color-glass-glow: var(--glass-glow);
 }
 
 :root,
@@ -24,6 +29,12 @@
   --primary-foreground: #ffffff;
   --border: #e4e4e7;
   --border-strong: #71717a;
+
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(228, 228, 231, 0.6);
+  --glass-highlight: rgba(255, 255, 255, 0.6);
+  --glass-shadow: rgba(0, 0, 0, 0.06);
+  --glass-glow: rgba(255, 255, 255, 0.4);
 
   --font-latin: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-stack-en: var(--font-latin), "Nyala", "Kefa", sans-serif;
@@ -41,6 +52,12 @@
   --primary-foreground: #09090b;
   --border: #27272a;
   --border-strong: #a1a1aa;
+
+  --glass-bg: rgba(24, 24, 27, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.08);
+  --glass-shadow: rgba(0, 0, 0, 0.4);
+  --glass-glow: rgba(255, 255, 255, 0.04);
 }
 
 html[lang="en"] {
@@ -64,5 +81,49 @@ html[lang="am"] {
 
   html[lang="am"] body {
     font-family: var(--font-stack-am);
+  }
+}
+
+.glass-surface {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 6px -1px var(--glass-shadow);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-surface {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: var(--glass-border);
+    background-image: linear-gradient(135deg, var(--glass-highlight) 0%, transparent 60%);
+    box-shadow: 0 4px 20px -2px var(--glass-shadow);
+  }
+}
+
+@keyframes entrance {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.entrance-fade {
+  animation: entrance 0.4s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entrance-fade {
+    animation-name: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  [data-testid="tilt-card"] {
+    transform: none !important;
   }
 }

@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 import { CAMPAIGN_GOAL_BIRR, UI_COPY, type AppLocale } from '@/lib/constants';
 import { formatBirr, formatShortDate } from '@/lib/validation';
 import { ProgressBar, StatCard } from '@/components/UiPrimitives';
+import { TiltCard } from '@/components/TiltCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,7 +40,7 @@ export default async function HomePage({
   const stats = await getPublicCampaignStats();
 
   return (
-    <main className="mx-auto max-w-6xl space-y-14 px-4 py-10 sm:px-6">
+    <div className="space-y-14">
       {/* Hero Banner */}
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 px-6 py-12 text-white shadow-xl sm:px-12 sm:py-16">
         <div className="max-w-3xl space-y-5">
@@ -69,20 +70,22 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* Live Campaign Progress */}
-      <section className="space-y-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <StatCard label={copy.progress.raised} value={formatBirr(stats.totalBirr)} accent="emerald" />
-          <StatCard label={copy.progress.goal} value={formatBirr(CAMPAIGN_GOAL_BIRR)} accent="amber" />
-          <StatCard
-            label={copy.progress.donors}
-            value={stats.donorCount}
-            hint={copy.progress.verified}
-            accent="slate"
-          />
-        </div>
-        <ProgressBar current={stats.totalBirr} goal={CAMPAIGN_GOAL_BIRR} />
-      </section>
+      {/* Live Campaign Progress wrapped in TiltCard with entrance animation */}
+      <TiltCard className="entrance-fade">
+        <section className="space-y-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <StatCard label={copy.progress.raised} value={formatBirr(stats.totalBirr)} accent="emerald" />
+            <StatCard label={copy.progress.goal} value={formatBirr(CAMPAIGN_GOAL_BIRR)} accent="amber" />
+            <StatCard
+              label={copy.progress.donors}
+              value={stats.donorCount}
+              hint={copy.progress.verified}
+              accent="slate"
+            />
+          </div>
+          <ProgressBar current={stats.totalBirr} goal={CAMPAIGN_GOAL_BIRR} />
+        </section>
+      </TiltCard>
 
       {/* 3-Step Flow */}
       <section className="space-y-6">
@@ -128,6 +131,6 @@ export default async function HomePage({
           </div>
         </section>
       )}
-    </main>
+    </div>
   );
 }

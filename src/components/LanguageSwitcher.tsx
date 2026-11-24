@@ -10,7 +10,7 @@ export function LanguageSwitcher() {
   return (
     <div
       data-testid="language-switcher"
-      className="inline-flex items-center gap-1 rounded-lg border border-stone-300 dark:border-slate-700 p-1 text-xs font-semibold"
+      className="inline-flex items-center gap-1 rounded-lg border border-border-strong bg-surface p-1 text-xs font-semibold"
       role="group"
       aria-label="Language selection"
     >
@@ -20,11 +20,10 @@ export function LanguageSwitcher() {
         data-testid="lang-switch-en"
         aria-label="Switch to English"
         aria-current={currentLocale === 'en' ? 'true' : undefined}
-        className={`rounded px-2.5 py-1 transition ${
-          currentLocale === 'en'
-            ? 'bg-[#1B4332] text-white shadow-sm'
-            : 'text-stone-700 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-800'
-        }`}
+        className={`rounded px-2.5 py-1 transition ${currentLocale === 'en'
+            ? 'bg-primary text-primary-foreground shadow-sm'
+            : 'text-muted hover:text-foreground hover:bg-muted/10'
+          }`}
       >
         EN
       </Link>
@@ -34,11 +33,10 @@ export function LanguageSwitcher() {
         data-testid="lang-switch-am"
         aria-label="ወደ አማርኛ ቀይር (Switch to Amharic)"
         aria-current={currentLocale === 'am' ? 'true' : undefined}
-        className={`rounded px-2.5 py-1 transition ${
-          currentLocale === 'am'
-            ? 'bg-[#1B4332] text-white shadow-sm'
-            : 'text-stone-700 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-800'
-        }`}
+        className={`rounded px-2.5 py-1 transition ${currentLocale === 'am'
+            ? 'bg-primary text-primary-foreground shadow-sm'
+            : 'text-muted hover:text-foreground hover:bg-muted/10'
+          }`}
       >
         አማርኛ
       </Link>
