@@ -26,6 +26,11 @@
     "en": "English",
     "am": "አማርኛ"
   },
+  "Theme": {
+    "toggle": "Toggle theme",
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
+  },
   "content": {
     "vision": "Empowering communities through transparent, faith-rooted support across Ethiopia."
   }

@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { routing, isValidLocale } from '@/i18n/routing';
 import { jakarta, notoEthiopic } from '@/lib/fonts';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { ThemeProvider } from '@/components/ThemeProvider';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -62,42 +64,47 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={fontVariables} suppressHydrationWarning>
-      <body className="antialiased min-h-screen bg-[#FAF8F5] text-[#0F172A] dark:bg-[#090D16] dark:text-[#F7F5F0]">
-        <NextIntlClientProvider messages={messages}>
-          {/* Top Navigation Bar */}
-          <header className="border-b border-stone-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur sticky top-0 z-30">
-            <div className="max-w-4xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-              <Link
-                href={`/${locale}`}
-                className="text-lg font-bold text-[#1B4332] dark:text-emerald-400"
-              >
-                {locale === 'am' ? 'ለጌታ ማበደር' : 'Lend To Lord'}
-              </Link>
+      <body className="antialiased min-h-screen bg-background text-foreground">
+        <ThemeProvider>
+          <NextIntlClientProvider messages={messages}>
+            {/* Top Navigation Bar */}
+            <header className="border-b border-border bg-surface/80 backdrop-blur sticky top-0 z-30">
+              <div className="max-w-4xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <Link
+                  href={`/${locale}`}
+                  className="text-lg font-bold text-foreground"
+                >
+                  {locale === 'am' ? 'ለጌታ ማበደር' : 'Lend To Lord'}
+                </Link>
 
-              <nav className="flex items-center gap-4 text-sm font-medium">
-                <Link href={`/${locale}`} className="hover:text-[#1B4332] dark:hover:text-emerald-400">
-                  {tNav('home')}
-                </Link>
-                <Link href={`/${locale}/contribute`} className="hover:text-[#1B4332] dark:hover:text-emerald-400">
-                  {tNav('contribute')}
-                </Link>
-                <Link href={`/${locale}/join`} className="hover:text-[#1B4332] dark:hover:text-emerald-400">
-                  {tNav('join')}
-                </Link>
-                <Link href={`/${locale}/me`} className="hover:text-[#1B4332] dark:hover:text-emerald-400">
-                  {tNav('myHistory')}
-                </Link>
-                <Link href="/admin" className="hover:text-[#1B4332] dark:hover:text-emerald-400">
-                  {tNav('admin')}
-                </Link>
-              </nav>
+                <nav className="flex items-center gap-4 text-sm font-medium">
+                  <Link href={`/${locale}`} className="text-muted hover:text-foreground">
+                    {tNav('home')}
+                  </Link>
+                  <Link href={`/${locale}/contribute`} className="text-muted hover:text-foreground">
+                    {tNav('contribute')}
+                  </Link>
+                  <Link href={`/${locale}/join`} className="text-muted hover:text-foreground">
+                    {tNav('join')}
+                  </Link>
+                  <Link href={`/${locale}/me`} className="text-muted hover:text-foreground">
+                    {tNav('myHistory')}
+                  </Link>
+                  <Link href="/admin" className="text-muted hover:text-foreground">
+                    {tNav('admin')}
+                  </Link>
+                </nav>
 
-              <LanguageSwitcher />
-            </div>
-          </header>
+                <div className="flex items-center gap-2">
+                  <LanguageSwitcher />
+                  <ThemeToggle />
+                </div>
+              </div>
+            </header>
 
-          <div className="max-w-4xl mx-auto px-4 py-8">{children}</div>
-        </NextIntlClientProvider>
+            <div className="max-w-4xl mx-auto px-4 py-8">{children}</div>
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
