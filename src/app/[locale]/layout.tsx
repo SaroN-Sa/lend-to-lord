@@ -1,24 +1,12 @@
 import type { Metadata } from 'next';
-import { Noto_Sans_Ethiopic, Plus_Jakarta_Sans } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { routing, isValidLocale } from '@/i18n/routing';
+import { jakarta, notoEthiopic } from '@/lib/fonts';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import '../globals.css';
-
-const notoEthiopic = Noto_Sans_Ethiopic({
-  subsets: ['ethiopic'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-ethiopic',
-});
-
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-jakarta',
-});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -68,13 +56,13 @@ export default async function LocaleLayout({
   const messages = await getMessages();
   const tNav = await getTranslations('Nav');
 
+  // Attach --font-ethiopic ONLY when locale === 'am'
+  // On /en, --font-ethiopic is not attached to <html>, ensuring zero webfont download on English pages
+  const fontVariables = `${jakarta.variable} ${locale === 'am' ? notoEthiopic.variable : ''}`.trim();
+
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body
-        className={`${jakarta.variable} ${notoEthiopic.variable} antialiased min-h-screen bg-[#FAF8F5] text-[#0F172A] dark:bg-[#090D16] dark:text-[#F7F5F0] ${
-          locale === 'am' ? 'leading-relaxed' : 'leading-normal'
-        }`}
-      >
+    <html lang={locale} className={fontVariables} suppressHydrationWarning>
+      <body className="antialiased min-h-screen bg-[#FAF8F5] text-[#0F172A] dark:bg-[#090D16] dark:text-[#F7F5F0]">
         <NextIntlClientProvider messages={messages}>
           {/* Top Navigation Bar */}
           <header className="border-b border-stone-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur sticky top-0 z-30">
