@@ -8,7 +8,10 @@ export const dynamic = 'force-dynamic';
 function isAuthorized(request: NextRequest): boolean {
   return Boolean(
     request.cookies.get('admin_session')?.value ||
-      request.cookies.get('sb-access-token')?.value
+      request.cookies.get('sb-access-token')?.value ||
+      request.cookies
+        .getAll()
+        .some((c) => c.name.startsWith('sb-') && c.name.includes('-auth-token'))
   );
 }
 

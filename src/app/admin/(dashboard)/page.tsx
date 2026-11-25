@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   formatBirr,
   formatShortDate,
@@ -11,6 +12,7 @@ import {
 import { AlertBanner, StatCard, StatusBadge } from '@/components/UiPrimitives';
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
   const [records, setRecords] = useState<ContributionRecord[]>([]);
   const [filter, setFilter] = useState<'all' | ContributionStatus>('all');
   const [search, setSearch] = useState('');
@@ -95,6 +97,12 @@ export default function AdminDashboardPage() {
         </div>
         <div className="flex items-center gap-3">
           <Link
+            href="/admin/content"
+            className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+          >
+            Hero & Sponsors
+          </Link>
+          <Link
             href="/admin/updates"
             className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
           >
@@ -106,6 +114,17 @@ export default function AdminDashboardPage() {
           >
             View Analytics & Reports →
           </Link>
+          <button
+            type="button"
+            onClick={async () => {
+              await fetch('/api/admin/auth', { method: 'DELETE' });
+              router.push('/admin/login');
+              router.refresh();
+            }}
+            className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-sm font-semibold text-rose-700 hover:bg-rose-100 transition"
+          >
+            Sign Out
+          </button>
         </div>
       </div>
 

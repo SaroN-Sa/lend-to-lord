@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 export const dynamic = 'force-dynamic';
@@ -66,7 +67,25 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json({ ok: true });
+    const cookieStore = await cookies();
+    cookieStore.set('admin_session', 'true', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    const response = NextResponse.json({ ok: true });
+    response.cookies.set('admin_session', 'true', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    return response;
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : 'Login error' },
@@ -78,5 +97,9 @@ export async function POST(req: Request) {
 export async function DELETE() {
   const supabase = await createSupabaseServerClient();
   await supabase.auth.signOut();
-  return NextResponse.json({ ok: true });
+  const cookieStore = await cookies();
+  cookieStore.delete('admin_session');
+  const response = NextResponse.json({ ok: true });
+  response.cookies.delete('admin_session');
+  return response;
 }
