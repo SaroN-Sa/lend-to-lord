@@ -8,6 +8,7 @@ import { VisionSection } from '@/components/home/VisionSection';
 import { HowItWorksSection } from '@/components/home/HowItWorksSection';
 import { MonthlyTotalCard } from '@/components/MonthlyTotalCard';
 import { MonthlyTotalSkeleton } from '@/components/MonthlyTotalSkeleton';
+import { getHeroData } from '@/lib/hero';
 
 export async function generateMetadata({
   params,
@@ -46,9 +47,12 @@ export default async function HomePage({
   }
 
   setRequestLocale(locale);
-  const t = await getTranslations('Home');
-  const tContent = await getTranslations('content');
-  const tHow = await getTranslations('HowItWorks');
+  const [t, tContent, tHow, hero] = await Promise.all([
+    getTranslations('Home'),
+    getTranslations('content'),
+    getTranslations('HowItWorks'),
+    getHeroData(locale),
+  ]);
 
   return (
     <div className="relative space-y-8">
@@ -59,6 +63,7 @@ export default async function HomePage({
           title={t('title')}
           subtitle={t('subtitle')}
           ctaText={t('becomePartner')}
+          hero={hero}
         />
       </div>
 

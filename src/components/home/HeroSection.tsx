@@ -1,11 +1,14 @@
 import * as React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
+import type { HeroDataState } from '@/lib/hero';
 
 interface HeroSectionProps {
   locale: string;
   title: string;
   subtitle: string;
   ctaText: string;
+  hero: HeroDataState;
 }
 
 export function HeroSection({
@@ -13,35 +16,53 @@ export function HeroSection({
   title,
   subtitle,
   ctaText,
+  hero,
 }: HeroSectionProps) {
   return (
-    <section className="text-center space-y-8 max-w-4xl mx-auto">
-      <div className="space-y-4">
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-foreground">
-          {title}
-        </h1>
-        <p className="max-w-2xl mx-auto text-lg sm:text-xl text-muted leading-relaxed">
-          {subtitle}
-        </p>
-      </div>
-
-      <div>
-        <Link
-          href={`/${locale}/join`}
-          className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-3.5 text-base font-bold text-primary-foreground shadow-sm transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-strong"
-        >
-          {ctaText}
-        </Link>
-      </div>
-
-      {/* Hero Visual Frame with Token-Based Glossy Gradient Fallback */}
+    <section
+      data-testid="hero-visual-frame"
+      className="relative w-full min-h-[420px] sm:min-h-[540px] max-w-5xl mx-auto rounded-2xl overflow-hidden border border-border shadow-sm flex items-center justify-center px-6 py-16 sm:px-12 sm:py-20"
+    >
+      {/* Always-present CSS-token gradient fallback */}
       <div
-        data-testid="hero-visual-frame"
-        className="w-full aspect-[4/3] sm:aspect-[16/9] max-w-3xl mx-auto rounded-2xl border border-border bg-gradient-to-br from-surface/80 via-surface/40 to-muted/10 shadow-sm backdrop-blur-sm flex items-center justify-center p-6 text-muted text-sm font-medium transition-all"
-      >
-        <div className="text-center space-y-1">
-          <p className="text-foreground font-semibold">Lend To Lord</p>
-          <p className="text-xs text-muted">Transparent Partner Contributions</p>
+        aria-hidden="true"
+        className="absolute inset-0 z-0 bg-gradient-to-br from-hero-gradient-from via-hero-gradient-via to-hero-gradient-to"
+      />
+
+      {/* Admin Hero Image */}
+      {hero.status === 'image' && (
+        <Image
+          src={hero.src}
+          alt={hero.alt}
+          width={hero.width}
+          height={hero.height}
+          preload
+          sizes="(max-width: 1024px) 100vw, 1024px"
+          className="absolute inset-0 z-10 h-full w-full object-cover object-center"
+        />
+      )}
+
+      {/* Dark scrim overlay for WCAG AA text readability */}
+      <div aria-hidden="true" className="absolute inset-0 z-20 bg-hero-scrim" />
+
+      {/* Foreground Hero Content */}
+      <div className="relative z-30 w-full text-center space-y-6 max-w-3xl mx-auto entrance-fade">
+        <div className="space-y-4">
+          <h1 className="text-3xl sm:text-6xl font-extrabold tracking-tight text-hero-text">
+            {title}
+          </h1>
+          <p className="max-w-2xl mx-auto text-base sm:text-xl text-hero-text-muted leading-relaxed">
+            {subtitle}
+          </p>
+        </div>
+
+        <div>
+          <Link
+            href={`/${locale}/join`}
+            className="inline-flex items-center justify-center rounded-xl bg-hero-cta-bg px-8 py-3.5 text-base font-bold text-hero-cta-text shadow-sm transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-strong"
+          >
+            {ctaText}
+          </Link>
         </div>
       </div>
     </section>
