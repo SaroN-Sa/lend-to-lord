@@ -16,7 +16,17 @@
     "recentContributions": "Recent Contributions",
     "anonymousEntry": "Someone contributed {amount} ETB",
     "namedEntry": "{name} contributed {amount} ETB",
-    "noContributions": "No contributions recorded yet this month."
+    "noContributions": "No contributions recorded yet this month.",
+    "totalUnavailable": "Monthly total temporarily unavailable.",
+    "totalUnavailableHint": "Please check back shortly or view individual updates.",
+    "birr": "ETB"
+  },
+  "Join": {
+    "title": "Join as a Partner",
+    "description": "Become a monthly partner and sponsor with Lend To Lord.",
+    "comingSoon": "Coming Soon",
+    "comingSoonHint": "Our partner onboarding is coming soon. Thank you for your support!",
+    "backHome": "Back to Home"
   },
   "Common": {
     "siteTitle": "Lend To Lord",
@@ -39,5 +49,16 @@
   },
   "content": {
     "vision": "Empowering communities through transparent, faith-rooted support across Ethiopia."
+  },
+  "HowItWorks": {
+    "title": "How Donation Works",
+    "subtitle": "A transparent, three-step journey to support God's work.",
+    "step1Title": "1. Pledge Your Support",
+    "step1Desc": "Choose your monthly commitment and join as a partner or sponsor.",
+    "step2Badge": "Verified",
+    "step2Title": "2. Bank Transfer & Proof",
+    "step2Desc": "Transfer directly to the designated church account and submit your receipt for transparent verification.",
+    "step3Title": "3. Transparent Impact",
+    "step3Desc": "Track monthly verified totals openly with full financial reconciliation."
   }
 }

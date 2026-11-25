@@ -118,8 +118,13 @@ export default async function LocaleLayout({
 
             {/* Footer */}
             <footer className="border-t border-border bg-surface/50 py-6 text-center text-xs text-muted">
-              <div className="max-w-5xl mx-auto px-4">
-                {tFooter('copyright')}
+              <div className="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div>{tFooter('copyright')}</div>
+                <div className="flex items-center gap-4">
+                  <Link href={`/${locale}/contribute`} className="hover:text-foreground transition-colors">
+                    {tNav('contribute')}
+                  </Link>
+                </div>
               </div>
             </footer>
           </NextIntlClientProvider>

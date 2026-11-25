@@ -116,11 +116,42 @@ html[lang="am"] {
   animation: entrance 0.4s ease-out forwards;
 }
 
+@keyframes particle-drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate3d(var(--tx, 8px), var(--ty, -12px), 0);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.3;
+  }
+}
+
+.glowing-particle {
+  animation: particle-drift var(--duration, 4s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  pointer-events: none;
+}
+
+[data-in-view="false"] .glowing-particle {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .entrance-fade {
     animation-name: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .glowing-particle {
+    animation-name: none !important;
+    transform: none !important;
+    opacity: 0.5 !important;
   }
 
   [data-testid="tilt-card"] {
