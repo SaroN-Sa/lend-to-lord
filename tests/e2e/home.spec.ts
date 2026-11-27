@@ -26,12 +26,12 @@ test.describe('Task 5: Home Page & Join Placeholder Verification', () => {
     const visionEn = page.locator('text=Empowering communities through transparent, faith-rooted support across Ethiopia.');
     await expect(visionEn).toBeVisible();
 
-    // Section 4: How Donation Works (3 steps)
+    // Section 4: How Donation Works (4 steps)
     await expect(page.locator('h2').filter({ hasText: 'How Donation Works' })).toBeVisible();
     await expect(page.getByText('1. Pledge Your Support')).toBeVisible();
-    await expect(page.getByText('2. Bank Transfer & Proof')).toBeVisible();
-    await expect(page.getByText('Verified', { exact: true })).toBeVisible();
-    await expect(page.getByText('3. Transparent Impact')).toBeVisible();
+    await expect(page.getByText('2. Transfer & Submit Proof')).toBeVisible();
+    await expect(page.getByText('3. Transparent Verification')).toBeVisible();
+    await expect(page.getByText('4. Community Impact')).toBeVisible();
 
     // --- Amharic Home ---
     await page.goto('/am');
@@ -50,10 +50,10 @@ test.describe('Task 5: Home Page & Join Placeholder Verification', () => {
 
     // How Donation Works in Amharic
     await expect(page.locator('h2').filter({ hasText: 'አስተዋጽኦ እንዴት ይሰራል?' })).toBeVisible();
-    await expect(page.getByText('1. ውሳኔዎን ያሳውቁ')).toBeVisible();
-    await expect(page.getByText('2. የባንክ ዝውውር እና ማረጋገጫ')).toBeVisible();
-    await expect(page.getByText('የተረጋገጠ', { exact: true })).toBeVisible();
-    await expect(page.getByText('3. ግልጽ ተጽዕኖ')).toBeVisible();
+    await expect(page.getByText('1. ድጋፍዎን ይወስኑ')).toBeVisible();
+    await expect(page.getByText('2. ያስተላልፉ እና ደረሰኝ ያስገቡ')).toBeVisible();
+    await expect(page.getByText('3. ግልጽ ማረጋገጫ')).toBeVisible();
+    await expect(page.getByText('4. የማህበረሰብ ተጽዕኖ')).toBeVisible();
   });
 
   test('2. Clicking "Become a Partner" CTA navigates to /[locale]/join and renders "Coming soon"', async ({
@@ -164,9 +164,9 @@ test.describe('Task 5: Home Page & Join Placeholder Verification', () => {
     const transform = await card.evaluate((el) => window.getComputedStyle(el).transform);
     expect(transform).toBe('none');
 
-    // Glowing particles have animation-name: none
-    const particle = page.locator('.glowing-particle').first();
-    await expect(particle).toBeVisible();
+    // How Donation Works particle animations have animation-name: none
+    const particle = page.locator('.hiw-in-card-dot').first();
+    await expect(particle).toBeAttached();
     const animName = await particle.evaluate((el) => window.getComputedStyle(el).animationName);
     expect(animName).toBe('none');
   });
@@ -174,6 +174,7 @@ test.describe('Task 5: Home Page & Join Placeholder Verification', () => {
   test('6. Regression verification: theme persistence and sticky stacking styles exist', async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto('/en');
 
     // Theme toggle test
@@ -186,10 +187,14 @@ test.describe('Task 5: Home Page & Join Placeholder Verification', () => {
     const nextTheme = await html.getAttribute('data-theme');
     expect(nextTheme).not.toBe(initialTheme);
 
-    // Check sticky stacking classes on sections (4 base + 1 optional Sponsors section)
-    const stickySections = page.locator('div.sticky.top-16');
+    // Check computed sticky sections at 1280x720 (4 base + 1 optional Sponsors section)
+    const stickyCount = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll('main > div > div')).filter(
+        (el) => window.getComputedStyle(el).position === 'sticky'
+      ).length;
+    });
     const hasSponsors =
       (await page.locator('[data-testid="sponsors-section"]').count()) > 0;
-    await expect(stickySections).toHaveCount(hasSponsors ? 5 : 4);
+    expect(stickyCount).toBe(hasSponsors ? 5 : 4);
   });
 });

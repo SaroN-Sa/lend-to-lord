@@ -52,14 +52,15 @@
   },
   "HowItWorks": {
     "title": "How Donation Works",
-    "subtitle": "A transparent, three-step journey to support God's work.",
+    "subtitle": "Four clear steps from your monthly pledge to verified community impact.",
     "step1Title": "1. Pledge Your Support",
-    "step1Desc": "Choose your monthly commitment and join as a partner or sponsor.",
-    "step2Badge": "Verified",
-    "step2Title": "2. Bank Transfer & Proof",
-    "step2Desc": "Transfer directly to the designated church account and submit your receipt for transparent verification.",
-    "step3Title": "3. Transparent Impact",
-    "step3Desc": "Track monthly verified totals openly with full financial reconciliation."
+    "step1Desc": "Choose a monthly commitment and join as a partner or sponsor.",
+    "step2Title": "2. Transfer & Submit Proof",
+    "step2Desc": "Send your gift to the designated church account and upload the receipt.",
+    "step3Title": "3. Transparent Verification",
+    "step3Desc": "Stewards reconcile bank statements and verify each submitted contribution.",
+    "step4Title": "4. Community Impact",
+    "step4Desc": "Track verified monthly totals and see lives reached across Ethiopia."
   },
   "Sponsors": {
     "heading": "Our Sponsors & Partners",

@@ -14,7 +14,7 @@ export async function SponsorsSection() {
   }
 
   return (
-    <div className="sticky top-16 z-[35] min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 bg-background border-b border-border/20 shadow-lg">
+    <div className="sticky top-16 z-[25] min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 bg-background border-b border-border/20 shadow-lg">
       <section
         aria-labelledby="sponsors-heading"
         data-testid="sponsors-section"

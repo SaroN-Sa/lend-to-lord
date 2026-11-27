@@ -57,8 +57,8 @@ export default async function HomePage({
 
   return (
     <div className="relative space-y-8">
-      {/* Section 1: Hero (Sticky Stacking z-10) */}
-      <div className="sticky top-16 z-10 min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 bg-background border-b border-border/20">
+      {/* Section 1: Hero (Sticky Stacking z-[5], below header z-30) */}
+      <div className="sticky top-16 z-[5] min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 bg-background border-b border-border/20">
         <HeroSection
           locale={locale}
           title={t('title')}
@@ -68,8 +68,8 @@ export default async function HomePage({
         />
       </div>
 
-      {/* Section 2: Monthly Total Card (Sticky Stacking z-20) */}
-      <div className="sticky top-16 z-20 min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 bg-background border-b border-border/20 shadow-lg">
+      {/* Section 2: Monthly Total Card (Sticky Stacking z-10) */}
+      <div className="sticky top-16 z-10 min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 bg-background border-b border-border/20 shadow-lg">
         <section aria-label={t('reportedTotal')} className="w-full">
           <Suspense fallback={<MonthlyTotalSkeleton />}>
             <MonthlyTotalCard locale={locale} />
@@ -77,30 +77,32 @@ export default async function HomePage({
         </section>
       </div>
 
-      {/* Section 3: Vision (Sticky Stacking z-30) */}
-      <div className="sticky top-16 z-30 min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 bg-background border-b border-border/20 shadow-lg">
-        <VisionSection visionText={tContent('vision')} />
-      </div>
-
-      {/* Section 3.5: Sponsors (renders nothing when empty or error) */}
-      <Suspense fallback={null}>
-        <SponsorsSection />
-      </Suspense>
-
-      {/* Section 4: How Donation Works (Sticky Stacking z-40) */}
-      <div className="sticky top-16 z-40 min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 bg-background shadow-lg">
+      {/* Section 3: How Donation Works (non-sticky on mobile/short screens, sticky at >=1024x600 z-[15]) */}
+      <div
+        data-testid="how-it-works-sticky"
+        className="hiw-sticky-section relative z-[15] py-10 bg-background border-b border-border/20 shadow-lg"
+      >
         <HowItWorksSection
           title={tHow('title')}
           subtitle={tHow('subtitle')}
-          step1Title={tHow('step1Title')}
-          step1Desc={tHow('step1Desc')}
-          step2Badge={tHow('step2Badge')}
-          step2Title={tHow('step2Title')}
-          step2Desc={tHow('step2Desc')}
-          step3Title={tHow('step3Title')}
-          step3Desc={tHow('step3Desc')}
+          steps={[
+            { title: tHow('step1Title'), description: tHow('step1Desc') },
+            { title: tHow('step2Title'), description: tHow('step2Desc') },
+            { title: tHow('step3Title'), description: tHow('step3Desc') },
+            { title: tHow('step4Title'), description: tHow('step4Desc') },
+          ]}
         />
       </div>
+
+      {/* Section 4: Vision (Sticky Stacking z-20) */}
+      <div className="sticky top-16 z-20 min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 bg-background border-b border-border/20 shadow-lg">
+        <VisionSection visionText={tContent('vision')} />
+      </div>
+
+      {/* Section 5: Sponsors (Sticky Stacking z-[25], renders nothing when empty or error) */}
+      <Suspense fallback={null}>
+        <SponsorsSection />
+      </Suspense>
     </div>
   );
 }
