@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { HeroSection } from '@/components/home/HeroSection';
 import { VisionSection } from '@/components/home/VisionSection';
 import { HowItWorksSection } from '@/components/home/HowItWorksSection';
+import { SponsorsSection } from '@/components/home/SponsorsSection';
 import { MonthlyTotalCard } from '@/components/MonthlyTotalCard';
 import { MonthlyTotalSkeleton } from '@/components/MonthlyTotalSkeleton';
 import { getHeroData } from '@/lib/hero';
@@ -80,6 +81,11 @@ export default async function HomePage({
       <div className="sticky top-16 z-30 min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 bg-background border-b border-border/20 shadow-lg">
         <VisionSection visionText={tContent('vision')} />
       </div>
+
+      {/* Section 3.5: Sponsors (renders nothing when empty or error) */}
+      <Suspense fallback={null}>
+        <SponsorsSection />
+      </Suspense>
 
       {/* Section 4: How Donation Works (Sticky Stacking z-40) */}
       <div className="sticky top-16 z-40 min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 bg-background shadow-lg">

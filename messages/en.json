@@ -60,5 +60,14 @@
     "step2Desc": "Transfer directly to the designated church account and submit your receipt for transparent verification.",
     "step3Title": "3. Transparent Impact",
     "step3Desc": "Track monthly verified totals openly with full financial reconciliation."
+  },
+  "Sponsors": {
+    "heading": "Our Sponsors & Partners",
+    "subtitle": "Organizations and partners supporting transparent monthly impact.",
+    "previous": "Previous sponsor",
+    "next": "Next sponsor",
+    "pause": "Pause",
+    "play": "Play",
+    "opensInNewTab": "opens in a new tab"
   }
 }

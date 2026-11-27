@@ -186,8 +186,10 @@ test.describe('Task 5: Home Page & Join Placeholder Verification', () => {
     const nextTheme = await html.getAttribute('data-theme');
     expect(nextTheme).not.toBe(initialTheme);
 
-    // Check sticky stacking classes on sections
+    // Check sticky stacking classes on sections (4 base + 1 optional Sponsors section)
     const stickySections = page.locator('div.sticky.top-16');
-    await expect(stickySections).toHaveCount(4);
+    const hasSponsors =
+      (await page.locator('[data-testid="sponsors-section"]').count()) > 0;
+    await expect(stickySections).toHaveCount(hasSponsors ? 5 : 4);
   });
 });
